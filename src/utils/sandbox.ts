@@ -3,7 +3,7 @@ import { NodeVM, VM, VMScript } from 'vm2'
 const executeScript = (
   script: string,
   payloadType: PayloadType,
-  input: Buffer,
+  input: string,
   msgType: MessageType,
   index?: number,
 ): string => {
