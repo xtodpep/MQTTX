@@ -1,15 +1,17 @@
-import { VM, VMScript } from 'vm2'
+import { NodeVM, VM, VMScript } from 'vm2'
 
 const executeScript = (
   script: string,
   payloadType: PayloadType,
-  input: string,
+  input: Buffer,
   msgType: MessageType,
   index?: number,
 ): string => {
   let output = ''
+  console.log('test...')
   try {
-    const vm = new VM({
+    let ext = {}
+    const vm = new NodeVM({
       timeout: 10000,
       sandbox: {
         execute(callback: (value: any, msgType: MessageType, index?: number) => any) {
@@ -18,6 +20,9 @@ const executeScript = (
             _inputValue = JSON.parse(input)
           }
           let _output = callback(_inputValue, msgType, index)
+          console.log('test..asdasd')
+          console.log(_output)
+          console.log('test..asdasd')
           if (_output === undefined) {
             _output = 'undefined'
           } else if (_output === null) {
@@ -25,18 +30,25 @@ const executeScript = (
           } else {
             _output = _output.toString()
           }
+          ext = _output
           return _output
         },
       },
       eval: false,
       wasm: false,
+      require: {
+        builtin: ['fs', 'path', 'util'],
+        external: true,
+      },
     })
     const _script = new VMScript(script)
     output = vm.run(_script)
-    return output
+    console.log(ext)
+    return ext.toString()
   } catch (error) {
     // @ts-ignore
     output = error.toString()
+    console.log(output)
     return output
   }
 }

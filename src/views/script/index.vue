@@ -168,7 +168,8 @@ execute(handlePayload)`
   }
 
   private handleTestFunc() {
-    this.outputValue = sandbox.executeScript(this.scriptValue, this.inputType, this.inputValue, 'publish')
+    let vm_out = sandbox.executeScript(this.scriptValue, this.inputType, this.inputValue, 'publish')
+    //this.outputValue =
   }
 
   private async handleSave() {
